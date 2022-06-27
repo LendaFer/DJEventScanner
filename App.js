@@ -166,7 +166,6 @@ const tick = async (video) => {
     const { data: { lines } } = await worker.recognize(canvas);
     testText(lines);
     if(scanning){
-        containerBottom.appendChild(canvas)
         requestAnimationFrame(tick(video));
     }else{
         scanned(text)
@@ -186,7 +185,7 @@ const testText = async (lines) => {
     const name = line1.substring(0, line1.length-1)
     const line2 = lines[1].text
     const company = line2.substring(0, line2.length-1)
-    console.log(line1)
+    containerBottom.innerHTML += "<p>${name}</p>"
     if(names.includes(name)){
         console.log(name)
         console.log(company)
