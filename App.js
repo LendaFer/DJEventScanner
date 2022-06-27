@@ -101,12 +101,12 @@ scanButton.addEventListener("click", async ()=>{
     startLoadingCard()
 })
 
-function newContext({width, height}, contextType = '2d') {
+/* function newContext({width, height}, contextType = '2d') {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     return canvas.getContext(contextType);
-}
+}*/
 
 backButton.addEventListener("click", async ()=>{
     scanning = false;
@@ -117,7 +117,6 @@ const buildStartPage = () => {
     containerBottom.innerHTML = "";
     containerCamera.innerHTML = "";
     longCol.innerHTML = "";
-    testNum = 0;
     containerCamera.appendChild(cameraCanvas);
     containerBottom.appendChild(scanButton);
     scanButton.innerText = "Start Scan"
@@ -157,10 +156,11 @@ const startLoadingCard = async () =>{
 }
 
 const tick = async (video) => {
-    const canvas = document.createElement("canvas")
+    const canvas = document.createElement("canvas");
     canvas.height = video.offsetHeight;
     canvas.width = video.offsetWidth;
     canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
+    //testcanvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
     //canvas.getContext("2d").drawImage(video, 0, 0)
     // irgendein try and catch ding damit nicht immer fehlermeldungen kommen!
     const { data: { lines } } = await worker.recognize(canvas);
@@ -168,15 +168,21 @@ const tick = async (video) => {
     if(scanning){
         requestAnimationFrame(tick(video));
     }else{
-        scanned(text)
+        scanned(lines)
     }
     
 }
 
 const scanned = (lines) => {
-    longCol.innerHTML = "<p id=name>Nils Folkerts</p> <p id=company>CGI</p>"
+    const line1 = lines[0].text
+    const name = line1.substring(0, line1.length-1)
+    const line2 = lines[1].text
+    const company = line2.substring(0, line2.length-1)
+    longCol.innerHTML = "<p id=name>"+name+"</p> <p id=company>"+ company +"</p>"
     colCenter.innerHTML = ""
     backButton.innerText = "Back"
+    containerCamera.innerHTML = "";
+    containerCamera.appendChild(cameraCanvas);
     containerBottom.appendChild(backButton)
 }
 
@@ -186,11 +192,8 @@ const testText = async (lines) => {
     const line2 = lines[1].text
     const company = line2.substring(0, line2.length-1)
     if(names.includes(name)){
-        alert(name)
         if(companys[names.indexOf(name)] == company){
-            alert(name)
             scanning = false;
-            console.log("TeST")
         }        
     }
 }
