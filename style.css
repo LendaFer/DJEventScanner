@@ -7,10 +7,16 @@
     padding-right: 50px;
 }
 
+.nav-custom{
+    height: 15vh;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
 #camera-canvas{
-    width: 50vw;
-    height: 50vh;
-    margin: 5vh;
+    width: 80vw;
+    height: 80vw;
+    margin-top: 10vh;
     border-radius: 30px;
     margin-right: auto;
     margin-left: auto;
@@ -18,7 +24,7 @@
 }
 
 #container-bottom{
-    width: 50vw;
+    width: 80vw;
     height: 20vh;
     border-radius: 30px;
     margin-right: auto;
@@ -26,10 +32,9 @@
     display: block;
 }
 
-
 #scan-button{
-    width: 20vw;
-    height: 10vw;
+    width: 40vw;
+    height: 10vh;
     margin-top: 10vh;
     border-radius: 30px;
     margin-right: auto;
@@ -47,9 +52,8 @@
 }
 
 #camera-video{
-    width: 50vw;
+    width: 80vw;
     height: 50vh;
-    margin: 10vh;
     margin-right: auto;
     margin-left: auto;
     display: block;
@@ -74,13 +78,6 @@
     overflow: hidden;
     position: relative;
 }
-.shimmer::before {
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    z-index: 1;
-}
 
 .shimmer::before {
     content: '';
@@ -101,3 +98,7 @@
     }
   }
 
+#name, #company {
+    margin: auto;
+    margin-bottom: 1vh;
+}

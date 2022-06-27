@@ -116,7 +116,7 @@ const tick = async (video) => {
 
 const scanned = async (text) => {
     console.log("Test")
-    longCol.innerHTML = "<p>Nils Folkerts </p> <p>CGI</p>"
+    longCol.innerHTML = "<p id=name>Nils Folkerts</p> <p id=company>CGI</p>"
     colCenter.innerHTML = ""
 }
 
