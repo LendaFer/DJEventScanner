@@ -102,7 +102,7 @@ scanButton.addEventListener("click", async ()=>{
 })
 
 /* function newContext({width, height}, contextType = '2d') {
-    const canvas = document.createElement('canvas');
+    const canvas = document.getElementById('testcanvas');
     canvas.width = width;
     canvas.height = height;
     return canvas.getContext(contextType);
