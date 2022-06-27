@@ -1,3 +1,13 @@
+.navbar{
+    border-bottom-left-radius: 70px;
+    border-bottom-right-radius: 70px;
+}
+
+.navbar-brand{
+    padding-left: 10vw;
+    font-size: 30px;
+}
+
 .dropdown-menu{
     max-height: 280px;
     overflow-y: auto;
@@ -8,9 +18,7 @@
 }
 
 .nav-custom{
-    height: 15vh;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    height: 20vh;
 }
 
 #camera-canvas{
@@ -41,6 +49,16 @@
     margin-left: auto;
     display: block;
 }
+#back-button{
+    width: 40vw;
+    height: 5vh;
+    margin-top: 5vh;
+    border-radius: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+
 
 #stop-scanning{
     width: 20vw;

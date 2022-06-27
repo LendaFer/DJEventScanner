@@ -1,3 +1,36 @@
+//Hardcoded example people
+const data = [
+    {person:{
+        name: "Nils Folkerts",
+        company: "CGI"
+    }},
+    {person:{
+        name: "Matthias Folkerts",
+        company: "CGI"
+    }},
+    {person:{
+        name: "Carsten Müller",
+        company: "HHU"
+    }},
+    {person:{
+        name: "Albert Einstein",
+        company: "Long Complicated Company Name"
+    }},
+    {person:{
+        name: "Simone de Beauvoir",
+        company: "Philosophy"
+    }},
+    {person:{
+        name: "Mandelbrot",
+        company: "Mathematic"
+    }}
+]
+
+const names = data.map(obj => obj.person.name)
+const companys = data.map(obj => obj.person.company)
+
+
+
 //NameContainer
 const textCard = document.createElement("div")
 textCard.setAttribute("class", "card")
@@ -20,20 +53,37 @@ fauxText.setAttribute("class", "faux-text")
 const fauxTextShort = document.createElement("div")
 fauxTextShort.setAttribute("class", "faux-text short")
 
+//backButton
+const backButton = document.createElement("button")
+backButton.setAttribute("class", "btn btn-primary")
+backButton.setAttribute("id", "back-button")
+
+//buildStartPage
+const cameraCanvas = document.createElement("div")
+cameraCanvas.setAttribute("class", "canvas bg-secondary")
+cameraCanvas.setAttribute("id", "camera-canvas")
+const scanButton = document.createElement("button")
+scanButton.setAttribute("class", "btn btn-primary")
+scanButton.setAttribute("id", "scan-button")
+
+//const for video
+const marginX = 10;
+const marginY = 50;
+const width = 500;
+const height = 400; 
+
+let testNum = 0;
 
 //globals
 let scanning = false;
 
 //containers
 const containerBottom = document.getElementById("container-bottom");
-
+const containerCamera = document.getElementById("container-camera")
 let currentBooth = document.getElementById("dropdown-button").innerText;
 
 //worker
 const worker = Tesseract.createWorker();
-
-//video
-
 
 //hardcoded in this example -> normally known from backend
 const numberOfBooths = 10;
@@ -45,12 +95,6 @@ for(let i = 0; i < boothButtons.length; i++){
         document.getElementById("dropdown-button").innerText = currentBooth;
     })
 }
-
-
-//scan-button
-const scanButton = document.getElementById("scan-button");
-//camera-card
-const cameraCard = document.getElementById("camera-canvas");
 
 scanButton.addEventListener("click", async ()=>{
     startScanning()
@@ -64,7 +108,22 @@ function newContext({width, height}, contextType = '2d') {
     return canvas.getContext(contextType);
 }
 
+backButton.addEventListener("click", async ()=>{
+    scanning = false;
+    buildStartPage()
+})
 
+const buildStartPage = () => {
+    containerBottom.innerHTML = "";
+    containerCamera.innerHTML = "";
+    longCol.innerHTML = "";
+    testNum = 0;
+    containerCamera.appendChild(cameraCanvas);
+    containerBottom.appendChild(scanButton);
+    scanButton.innerText = "Start Scan"
+
+}
+  
 
 
 const startScanning = async () => {
@@ -99,13 +158,12 @@ const startLoadingCard = async () =>{
 
 const tick = async (video) => {
     const canvas = document.createElement("canvas")
-    canvas.height = 200;
-    canvas.width = 200;
-    canvas.getContext("2d").drawImage(video, 0, 0)
+    canvas.height = video.offsetHeight;
+    canvas.width = video.offsetWidth;
+    canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
     // irgendein try and catch ding damit nicht immer fehlermeldungen kommen!
-    const { data: { text } } = await worker.recognize(canvas);
-    testText(text);
-    scanned()
+    const { data: { lines } } = await worker.recognize(canvas);
+    testText(lines);
     if(scanning){
         requestAnimationFrame(tick(video));
     }else{
@@ -114,12 +172,27 @@ const tick = async (video) => {
     
 }
 
-const scanned = async (text) => {
-    console.log("Test")
+const scanned = (lines) => {
     longCol.innerHTML = "<p id=name>Nils Folkerts</p> <p id=company>CGI</p>"
     colCenter.innerHTML = ""
+    backButton.innerText = "Back"
+    containerBottom.appendChild(backButton)
 }
 
-const testText = async (text) => {
+const testText = async (lines) => {
+    const line1 = lines[0].text
+    const name = line1.substring(0, line1.length-1)
+    const line2 = lines[1].text
+    const company = line2.substring(0, line2.length-1)
+    console.log(name)
+    if(names.includes(name)){
+        console.log(name)
+        console.log(company)
+        if(companys[names.indexOf(name)] == company){
+            scanning = false;
+            console.log("TeST")
+        }        
+    }
 }
 
+buildStartPage()
