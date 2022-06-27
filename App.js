@@ -29,6 +29,9 @@ const data = [
 const names = data.map(obj => obj.person.name)
 const companys = data.map(obj => obj.person.company)
 
+//video 
+let video;
+const stream = await navigator.mediaDevices.getUserMedia({video: { facingMode: "environment", focusMode: "continuous", allowCrop: "true", height: 200, width: 200},audio: false})
 
 
 //NameContainer
@@ -102,7 +105,7 @@ scanButton.addEventListener("click", async ()=>{
 })
 
 /* function newContext({width, height}, contextType = '2d') {
-    const canvas = document.getElementById('testcanvas');
+    const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     return canvas.getContext(contextType);
@@ -127,16 +130,13 @@ const buildStartPage = () => {
 
 const startScanning = async () => {
     scanning = true;
-    
-    document.getElementById("container-camera").innerHTML="<video autoplay playsinline id=camera-video></video>";
-    const video = document.getElementById("camera-video")
-    const stream = await navigator.mediaDevices.getUserMedia({video: { facingMode: "environment", focusMode: "continuous", allowCrop: "true", height: 200, width: 200},audio: false})
+    containerCamera.innerHTML = "<video autoplay playsinline id=camera-video></video>"
+    video = document.getElementById("camera-video")
     video.srcObject = stream
-    
     await worker.load()
     await worker.loadLanguage("deu")
     await worker.initialize("deu")
-    requestAnimationFrame(tick(video))
+    requestAnimationFrame(tick)
 }
 
 
@@ -155,18 +155,17 @@ const startLoadingCard = async () =>{
     colCenter.appendChild(spinner)   
 }
 
-const tick = async (video) => {
+const tick = async () => {
     const canvas = document.createElement("canvas");
     canvas.height = video.offsetHeight;
     canvas.width = video.offsetWidth;
-    canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
+    //canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
     //testcanvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
-    //canvas.getContext("2d").drawImage(video, 0, 0)
-    // irgendein try and catch ding damit nicht immer fehlermeldungen kommen!
+    canvas.getContext("2d").drawImage(video, 0, 0)
     const { data: { lines } } = await worker.recognize(canvas);
     testText(lines);
     if(scanning){
-        requestAnimationFrame(tick(video));
+        requestAnimationFrame(tick);
     }else{
         scanned(lines)
     }
@@ -174,6 +173,7 @@ const tick = async (video) => {
 }
 
 const scanned = (lines) => {
+    // irgendein try and catch ding damit nicht immer Fehlermeldungen kommen!
     const line1 = lines[0].text
     const name = line1.substring(0, line1.length-1)
     const line2 = lines[1].text
@@ -187,15 +187,18 @@ const scanned = (lines) => {
 }
 
 const testText = async (lines) => {
-    const line1 = lines[0].text
-    const name = line1.substring(0, line1.length-1)
-    const line2 = lines[1].text
-    const company = line2.substring(0, line2.length-1)
-    if(names.includes(name)){
-        if(companys[names.indexOf(name)] == company){
-            scanning = false;
-        }        
-    }
+    
+        const line1 = lines[0].text
+        const name = line1.substring(0, line1.length-1)
+        const line2 = lines[1].text
+        const company = line2.substring(0, line2.length-1)
+        console.log(line1)
+        console.log(line2)
+        if(names.includes(name)){
+            if(companys[names.indexOf(name)] == company){
+                scanning = false;
+            }        
+        }
 }
 
 buildStartPage()
