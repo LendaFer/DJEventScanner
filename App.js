@@ -191,6 +191,7 @@ const testText = async (lines) => {
         console.log(name)
         console.log(company)
         if(companys[names.indexOf(name)] == company){
+            alert(name)
             scanning = false;
             console.log("TeST")
         }        
