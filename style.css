@@ -77,6 +77,15 @@
     display: block;
 }
 
+#check-mark{
+    width: 50vw;
+    height: 50vw;
+    margin: 10vw;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+
 .placeholder {
     max-width: 300px;
 }

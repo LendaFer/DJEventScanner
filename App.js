@@ -56,6 +56,11 @@ fauxText.setAttribute("class", "faux-text")
 const fauxTextShort = document.createElement("div")
 fauxTextShort.setAttribute("class", "faux-text short")
 
+//checkMark
+const checkMark = document.createElement("img")
+checkMark.setAttribute("src", "CheckMark.png")
+checkMark.setAttribute("id", "check-mark")
+
 //backButton
 const backButton = document.createElement("button")
 backButton.setAttribute("class", "btn btn-primary")
@@ -75,15 +80,14 @@ const marginY = 50;
 const width = 500;
 const height = 400; 
 
-let testNum = 0;
 
 //globals
 let scanning = false;
+let currentBooth = document.getElementById("dropdown-button").innerText;
 
 //containers
 const containerBottom = document.getElementById("container-bottom");
 const containerCamera = document.getElementById("container-camera")
-let currentBooth = document.getElementById("dropdown-button").innerText;
 
 //worker
 const worker = Tesseract.createWorker();
@@ -103,13 +107,6 @@ scanButton.addEventListener("click", async ()=>{
     startScanning()
     startLoadingCard()
 })
-
-/* function newContext({width, height}, contextType = '2d') {
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    return canvas.getContext(contextType);
-}*/
 
 backButton.addEventListener("click", async ()=>{
     scanning = false;
@@ -162,7 +159,9 @@ const tick = async () => {
     //canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
     //testcanvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
     canvas.getContext("2d").drawImage(video, 0, 0)
-    const { data: { lines } } = await worker.recognize(canvas);
+    const { data: { lines } } = await worker.recognize(canvas, {
+        rectangle: { top: 50, left: 0, width: 200, height: 100 },
+      });
     testText(lines);
     if(scanning){
         requestAnimationFrame(tick);
@@ -182,7 +181,7 @@ const scanned = (lines) => {
     colCenter.innerHTML = ""
     backButton.innerText = "Back"
     containerCamera.innerHTML = "";
-    containerCamera.appendChild(cameraCanvas);
+    containerCamera.appendChild(checkMark);
     containerBottom.appendChild(backButton)
 }
 
