@@ -131,7 +131,7 @@ const startScanning = async () => {
     
     document.getElementById("container-camera").innerHTML="<video autoplay playsinline id=camera-video></video>";
     const video = document.getElementById("camera-video")
-    const stream = await navigator.mediaDevices.getUserMedia({video: { facingMode: "environment", allowCrop: "true", height: 200, width: 200},audio: false})
+    const stream = await navigator.mediaDevices.getUserMedia({video: { facingMode: "environment", focusMode: "continuous", allowCrop: "true", height: 200, width: 200},audio: false})
     video.srcObject = stream
     
     await worker.load()
@@ -160,8 +160,8 @@ const tick = async (video) => {
     const canvas = document.createElement("canvas")
     canvas.height = video.offsetHeight;
     canvas.width = video.offsetWidth;
-    //canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
-    canvas.getContext("2d").drawImage(video, 0, 0)
+    canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
+    //canvas.getContext("2d").drawImage(video, 0, 0)
     // irgendein try and catch ding damit nicht immer fehlermeldungen kommen!
     const { data: { lines } } = await worker.recognize(canvas);
     testText(lines);
@@ -185,10 +185,8 @@ const testText = async (lines) => {
     const name = line1.substring(0, line1.length-1)
     const line2 = lines[1].text
     const company = line2.substring(0, line2.length-1)
-    containerBottom.innerHTML += "<p>${name}</p>"
     if(names.includes(name)){
-        console.log(name)
-        console.log(company)
+        alert(name)
         if(companys[names.indexOf(name)] == company){
             alert(name)
             scanning = false;
