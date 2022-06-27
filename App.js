@@ -160,11 +160,13 @@ const tick = async (video) => {
     const canvas = document.createElement("canvas")
     canvas.height = video.offsetHeight;
     canvas.width = video.offsetWidth;
-    canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
+    //canvas.getContext("2d").drawImage(video, marginX, marginY, canvas.width-2*marginX, canvas.height-marginY, 0, 0, 500, 400)
+    canvas.getContext("2d").drawImage(video, 0, 0)
     // irgendein try and catch ding damit nicht immer fehlermeldungen kommen!
     const { data: { lines } } = await worker.recognize(canvas);
     testText(lines);
     if(scanning){
+        containerBottom.appendChild(canvas)
         requestAnimationFrame(tick(video));
     }else{
         scanned(text)
@@ -184,7 +186,7 @@ const testText = async (lines) => {
     const name = line1.substring(0, line1.length-1)
     const line2 = lines[1].text
     const company = line2.substring(0, line2.length-1)
-    console.log(name)
+    console.log(line1)
     if(names.includes(name)){
         console.log(name)
         console.log(company)
